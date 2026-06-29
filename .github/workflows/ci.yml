@@ -1,6 +1,10 @@
-name: Rust Email Newsletter Actions
+name: CI
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
 
 env:
   CARGO_TERM_COLOR: always
@@ -51,3 +55,13 @@ jobs:
       - name: Generate code coverage
         run: |
           cargo tarpaulin --verbose --workspace
+
+  audit:
+    name: cargo audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: rustsec/audit-check@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
